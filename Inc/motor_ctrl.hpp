@@ -361,6 +361,23 @@ public:
         return this->velocity;
     }
 
+    inline Float_Type GetTargetVelocity(void)
+    {
+    	return this->target_velocity;
+    }
+
+#ifdef CTRL_POS
+    inline int GetCurrentPositionPulse(void)
+    {
+    	return this->current_position_pulse;
+    }
+
+    inline int GetTargetPositonPulse(void)
+    {
+    	return this->target_position_pulse;
+    }
+#endif
+
     inline uint8_t GetStatusCode(void)
     {
         if(this->homing)

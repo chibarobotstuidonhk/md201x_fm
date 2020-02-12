@@ -63,11 +63,14 @@ extern SerialClass serial;
 
 //#define BROADCAST_STAT
 
+#define STREAMING_TARGET_CURRENT_VALUE
+
 // if conf0 pin is low on boot, diagnostic info is available on UART.
 bool conf_diag_uart = false;
 // if conf1 pin is low on boot, diagnostic info is available on CAN.
 bool conf_diag_can = false;
-bool conf2 = false;
+// if conf2 pin is low on boot, streaming target and current value with CAN.
+bool streaming_target_current_value = false;
 bool conf3 = false;
 bool conf4 = false;
 
@@ -85,7 +88,7 @@ void readPinConf(void)
 
     if ((GPIO_CONF2->IDR & GPIO_IDR_CONF2) == 0)
     {
-        conf2 = true;
+        streaming_target_current_value = true;
     }
 
     if ((GPIO_CONF3->IDR & GPIO_IDR_CONF3) == 0)
@@ -216,6 +219,11 @@ int main(void)
     uint32_t stat_interval = 200;
 #endif
 
+#ifdef STREAMING_TARGET_CURRENT_VALUE
+    uint32_t last_stream_time = HAL_GetTick();
+    uint32_t stream_interval = 1;
+#endif
+
 #ifdef SQUARE_TEST
     while ((GPIO_EMS->IDR & GPIO_IDR_EMS) == 0)
     {
@@ -263,6 +271,41 @@ int main(void)
     	}
 
     	HAL_CAN_GetState(&hcan);
+
+#ifdef STREAMING_TARGET_CURRENT_VALUE
+    	if (streaming_target_current_value){
+    		if (HAL_GetTick() - last_stream_time > stream_interval)
+    		        {
+    		            CAN_TxHeaderTypeDef tx_stream_header;
+    		            uint8_t tx_stream_payload[CAN_MTU];
+    		            //uint32_t status;
+
+    		            tx_stream_header.IDE = CAN_ID_STD;
+    		            tx_stream_header.RTR = CAN_RTR_DATA;
+    		            tx_stream_header.StdId = confStruct.can_id_stream;
+    		            tx_stream_header.DLC = 8;
+
+    		            int buf[2];
+    		            uint64_t *BUF;
+
+#ifdef CTRL_POS
+    		            buf[0] = control.GetCurrentPositionPulse();
+    		            buf[1] = control.GetTargetPositonPulse();
+    		            BUF = (uint64_t*)buf;
+#else
+    		            buf[0] = (int)(round(control.GetCurrentVelocity()*1000));
+    		            buf[1] = (int)(round(control.GetTargetVelocity()*1000));
+    		            BUF = (uint64_t*)buf;
+#endif
+
+    		            can_pack(tx_stream_payload, *BUF);
+
+    		            can_tx(&tx_stream_header, tx_stream_payload);
+
+    		            last_stream_time = HAL_GetTick();
+    		        }
+    	}
+#endif
         //TIM1->BDTR |= TIM_BDTR_MOE;
         //TIM1->BDTR &= ~TIM_BDTR_MOE;
         //TIM1->CCR1 = 690 - 1;
