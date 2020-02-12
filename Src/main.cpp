@@ -145,7 +145,7 @@ int main(void)
     serial.start_dma();
 
     can_init();
-    can_set_bitrate(CAN_BITRATE_500K);
+    can_set_bitrate(CAN_BITRATE_1000K);
 
     const char * buf = nullptr;
 
