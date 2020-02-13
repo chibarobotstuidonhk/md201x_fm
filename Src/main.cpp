@@ -221,7 +221,7 @@ int main(void)
 
 #ifdef STREAMING_TARGET_CURRENT_VALUE
     uint32_t last_stream_time = HAL_GetTick();
-    uint32_t stream_interval = 1;
+    uint32_t stream_interval = 10;
 #endif
 
 #ifdef SQUARE_TEST
@@ -285,20 +285,22 @@ int main(void)
     		            tx_stream_header.StdId = confStruct.can_id_stream;
     		            tx_stream_header.DLC = 8;
 
-    		            int buf[2];
+    		            int buff[2];
     		            uint64_t *BUF;
 
 #ifdef CTRL_POS
-    		            buf[0] = control.GetCurrentPositionPulse();
-    		            buf[1] = control.GetTargetPositonPulse();
-    		            BUF = (uint64_t*)buf;
+    		            buff[0] = control.GetCurrentPositionPulse();
+    		            buff[1] = control.GetTargetPositonPulse();
+//    		            buff[0] = -1;
+//           		    buff[1] = -1;
+    		            BUF = (uint64_t*)buff;
 #else
-    		            buf[0] = (int)(round(control.GetCurrentVelocity()*1000));
-    		            buf[1] = (int)(round(control.GetTargetVelocity()*1000));
-    		            BUF = (uint64_t*)buf;
+    		            buff[0] = (int)(roundf(control.GetCurrentVelocity()*1000));
+    		            buff[1] = (int)(roundf(control.GetTargetVelocity()*1000));
+    		            BUF = (uint64_t*)buff;
 #endif
 
-    		            can_pack(tx_stream_payload, *BUF);
+    		            can_pack(tx_stream_payload, 114514);
 
     		            can_tx(&tx_stream_header, tx_stream_payload);
 

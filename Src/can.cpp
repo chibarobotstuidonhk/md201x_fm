@@ -116,6 +116,7 @@ void can_init(void)
     //can_id_vel = can_id_cmd + 1;
     //can_id_stat = can_id_cmd + 3;
     //can_id_global = confStruct.can_id_global;
+
 }
 
 void can_read_conf(void)
