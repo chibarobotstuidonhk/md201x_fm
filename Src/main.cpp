@@ -300,7 +300,7 @@ int main(void)
     		            BUF = (uint64_t*)buff;
 #endif
 
-    		            can_pack(tx_stream_payload, 114514);
+    		            can_pack(tx_stream_payload, *BUF);
 
     		            can_tx(&tx_stream_header, tx_stream_payload);
 
