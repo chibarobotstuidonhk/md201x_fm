@@ -64,6 +64,7 @@ extern SerialClass serial;
 //#define BROADCAST_STAT
 
 #define STREAMING_TARGET_CURRENT_VALUE
+#define STREAMING_ID 0x7ff //most low priority ID
 
 // if conf0 pin is low on boot, diagnostic info is available on UART.
 bool conf_diag_uart = false;
@@ -220,6 +221,7 @@ int main(void)
 #endif
 
 #ifdef STREAMING_TARGET_CURRENT_VALUE
+    confStruct.can_id_stream = STREAMING_ID;
     uint32_t last_stream_time = HAL_GetTick();
     uint32_t stream_interval = 10;
 #endif
