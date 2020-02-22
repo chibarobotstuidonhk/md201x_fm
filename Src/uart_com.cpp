@@ -439,6 +439,23 @@ void uart::process(void)
         const char * msg = "set position target\r\n";
         serial.write((const uint8_t *) msg, strlen(msg));
     }
+    else if (strcmp(cmd, "SRSP") == 0)
+    {
+    	control.ResetPosition(payload);
+    	const char * name = "reset position";
+#ifdef LIMIT_POS
+    	if (payload > M_PI || payload < -M_PI )
+    	{
+    		uart::invalid_value(name, payload);
+    	}
+    	else
+    	{
+#endif
+    		uart::valid_value_set(name, "rad", payload);
+#ifdef LIMIT_POS
+    	}
+#endif
+    }
 #else
     else if (strcmp(cmd, "SVTG") == 0)
     {

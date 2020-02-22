@@ -155,7 +155,7 @@ void MotorCtrl::ResetPosition(Float_Type offset)
         return;
     }
 
-    this->current_position_pulse = offset * Kh * Tc;
+    this->current_position_pulse = offset / (Kh * Tc);
     this->target_position_pulse = this->current_position_pulse;
 }
 
