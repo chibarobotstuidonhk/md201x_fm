@@ -27,6 +27,7 @@ extern "C"
         double Kr;
         double MaxVel;
         double MaxTrq;
+        double Freepos; //position where MD stops velocity control
         double Vsup;
         double HomVel;
         double MaxTravel;

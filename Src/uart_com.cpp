@@ -134,7 +134,7 @@ void uart::process(void)
         {
             confStruct.can_id_cmd = base_id;
             confStruct.can_id_vel = base_id + 1;
-            confStruct.can_id_throw = base_id + 2;
+//            confStruct.can_id_throw = base_id + 2;
             confStruct.can_id_stat = base_id + 3;
             // well, base+2 is currently reserved for "future use." what a waste, eh?
         }
@@ -386,7 +386,18 @@ void uart::process(void)
     {
         // get kv
         uart::dump_value("Kv", "(rad/s)/rad", control.GetKv());
-    }/*
+    }
+    else if (strcmp(cmd, "SFRP") == 0)
+    {
+    	const char * name = "FreePos";
+    	control.SetEndVelcontrolPos(payload);
+    	uart::valid_value_set(name, "rad", payload);
+    }
+    else if (strcmp(cmd, "GFRP") == 0)
+    {
+    	uart::dump_value("FreePos", "rad", control.GetEndVelcontrolPos());
+    }
+    /*
     else if (strcmp(cmd, "CBNK") == 0)
     {
         // change bank
@@ -419,7 +430,7 @@ void uart::process(void)
         const char * msg = "read from flash\r\n";
         serial.write((const uint8_t *) msg, strlen(msg));
     }
-    else if (strcmp(cmd, "SENV") == 0)
+    else if (strcmp(cmd, "SENB") == 0)
     {
     	const char * msg;
         if(payload==1.0){
@@ -463,7 +474,6 @@ void uart::process(void)
     		serial.write((const uint8_t *) msg, strlen(msg));
     	}
     }
-
 #else
     else if (strcmp(cmd, "SVTG") == 0)
     {

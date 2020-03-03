@@ -182,6 +182,8 @@ private:
                                                      //電気ではなく機械を基準にしてもよかろう．
     Float_Type MaximumVoltage = 22;                     // デューティ最大のときの出力電圧で，電圧制限を定める．
 
+    Float_Type EndVelcontrolPos = 0;
+
     Float_Type SupplyVoltage = 24;
 
     Float_Type HomingVelocity = 1;                      // ホーミングの際の速度．
@@ -339,6 +341,17 @@ public:
     inline Float_Type GetMaximumTorque(void)
     {
         return this->MaximumTorque;
+    }
+
+    inline Float_Type SetEndVelcontrolPos(Float_Type tm)
+    {
+    	this->EndVelcontrolPos = tm;
+    	return 0;
+    }
+
+    inline Float_Type GetEndVelcontrolPos(void)
+    {
+    	return this->EndVelcontrolPos;
     }
 
     inline int SetSupplyVoltage(Float_Type vs)

@@ -240,6 +240,7 @@ void MotorCtrl::ReadConfig(void)
     this->HomingVelocity = confStruct.HomVel;
     this->MaximumTorque = confStruct.MaxTrq;
     this->SetSupplyVoltage(confStruct.Vsup);
+    this->EndVelcontrolPos = confStruct.Freepos;
 }
 
 void MotorCtrl::WriteConfig(void)
@@ -255,5 +256,6 @@ void MotorCtrl::WriteConfig(void)
     confStruct.HomVel = this->HomingVelocity;
     confStruct.MaxTrq = this->MaximumTorque;
     confStruct.Vsup = this->SupplyVoltage;
+    confStruct.Freepos = this->EndVelcontrolPos;
 }
 
