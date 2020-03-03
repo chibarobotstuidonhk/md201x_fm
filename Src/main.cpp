@@ -658,7 +658,8 @@ static void MX_TIM1_Init(void)
 
     TIM_InitStruct.Prescaler = 0;
     TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-    TIM_InitStruct.Autoreload = 1440 - 1;//50khz;
+    TIM_InitStruct.Autoreload = 1440 - 1;  // 50khz;
+//  TIM_InitStruct.Autoreload = 2880 - 1;  // 25khz;
     TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
     TIM_InitStruct.RepetitionCounter = 0;
     LL_TIM_Init(TIM1, &TIM_InitStruct);
