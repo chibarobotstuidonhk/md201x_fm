@@ -55,19 +55,22 @@ void MotorCtrl::Control(void)
         tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
     }
 
-// limit target velocity
-    if (MaximumVelocity < tmp_vel)
+// limit target velocity when not swing mode
+    if ((MaximumVelocity < tmp_vel) && !this->swing)
     {
-        this->target_velocity = MaximumVelocity;
+    	this->target_velocity = MaximumVelocity;
     }
-    else if (tmp_vel < -MaximumVelocity)
+    else if ((tmp_vel < -MaximumVelocity) && !this->swing)
     {
-        this->target_velocity = -MaximumVelocity;
+    	this->target_velocity = -MaximumVelocity;
     }
-    else
+   	else
     {
-        this->target_velocity = tmp_vel;
-    }
+    	this->target_velocity = tmp_vel;
+   	}
+
+
+
 #endif
 
 
@@ -200,6 +203,19 @@ void MotorCtrl::Home(void)
     this->_recover();
 
     led::mode = led::lighting_mode::error_0;
+}
+
+void MotorCtrl::Swing(void)
+{
+	if (this->shutdown && this->homing)
+	{
+		return;
+	}
+
+	this->swing = true;
+
+
+	led::mode = led::lighting_mode::error_1;
 }
 
 #endif

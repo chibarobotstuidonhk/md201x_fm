@@ -37,6 +37,7 @@ public:
 
         this->shutdown = true;
         this->homing = false;
+        this->swing = false;
 
         led::mode = led::lighting_mode::shutdown;
 
@@ -82,6 +83,8 @@ public:
     {
         return this->homing;
     }
+
+    void Swing(void);
 
 private:
 
@@ -134,6 +137,7 @@ private:
 
     bool shutdown = true;
     bool homing = false;
+    bool swing = false;
 
     int pulse = 0;
     Float_Type velocity = 0;                            // current velocity in [rad/s]

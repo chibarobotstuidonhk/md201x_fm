@@ -17,6 +17,7 @@ static constexpr uint8_t cmd_shutdown = 0x00;
 static constexpr uint8_t cmd_recover = 0x01;
 static constexpr uint8_t cmd_home = 0x10;
 static constexpr uint8_t get_status = 0x11;
+static constexpr uint8_t cmd_swing = 0x12;
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
@@ -72,6 +73,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             case cmd_home:
                 control.Home();
                 break;
+            case cmd_swing:
+            	control.Swing();
+            	break;
 #endif
             default:
                 break;
