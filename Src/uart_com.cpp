@@ -136,7 +136,6 @@ void uart::process(void)
             confStruct.can_id_vel = base_id + 1;
             confStruct.can_id_vel2 = base_id + 2;
             confStruct.can_id_stat = base_id + 3;
-            // well, base+2 is currently reserved for "future use." what a waste, eh?
         }
 
         uart::dump_can_id(true);

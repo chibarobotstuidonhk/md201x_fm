@@ -91,6 +91,14 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
         led::turn_on_can_led();
     }
+    else if ((rx_header.StdId == can_id_vel2) && (rx_header.DLC == 4))
+    {
+    	float vel_cmd;
+    	can_unpack(rx_payload, vel_cmd);
+    	control.
+
+
+    }
     else
     {
         led::process();
@@ -127,6 +135,7 @@ void can_read_conf(void)
 {
     can_id_cmd = confStruct.can_id_cmd;
     can_id_vel = confStruct.can_id_vel;
+    can_id_vel2 = confStruct.can_id_vel2;
     can_id_stat = confStruct.can_id_stat;
 }
 

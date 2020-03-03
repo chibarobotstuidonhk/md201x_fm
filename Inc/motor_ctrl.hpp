@@ -192,6 +192,7 @@ private:
 
     Float_Type HomingVelocity = 1;                      // ホーミングの際の速度．
                                                      // TODO: UARTから変更できるようにする．→できるようになった？
+    Float_Type Swing_velocity = 0;
 
 public:
 

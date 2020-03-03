@@ -50,6 +50,10 @@ void MotorCtrl::Control(void)
     {
         tmp_vel = this->HomingVelocity;
     }
+    else if (this->swing)
+    {
+    	tmp_vel = this->Swing_velocity; //CAN baseid +2で受け取った司令
+    }
     else
     {
         tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
