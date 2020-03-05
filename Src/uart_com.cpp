@@ -388,7 +388,7 @@ void uart::process(void)
     }
     else if (strcmp(cmd, "SASR") == 0)
     {
-    	payload = abs(payload);
+    	payload = fabs(payload);
     	const char * name = "AllowableSwingRange";
     	control.SetAllowableSwingRange(payload);
     	uart::valid_value_set(name, "rad", payload);
