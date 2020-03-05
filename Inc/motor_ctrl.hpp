@@ -151,6 +151,8 @@ private:
 #ifdef CTRL_POS
     int current_position_pulse = 0;
     int target_position_pulse = 0;
+    int allowable_range_pulse = 0;
+    int swing_offset_pulse = 0;
 #endif
 
     Float_Type target_velocity = 0;                     // target angular velocity [rad/sec]
@@ -186,7 +188,7 @@ private:
                                                      //電気ではなく機械を基準にしてもよかろう．
     Float_Type MaximumVoltage = 22;                     // デューティ最大のときの出力電圧で，電圧制限を定める．
 
-    Float_Type EndVelcontrolPos = 0;
+    Float_Type AllowableSwingRange = 0;					//　ぶんまわしの最大角度．司令を受け取ったところからの絶対角で正の値．
 
     Float_Type SupplyVoltage = 24;
 
@@ -348,15 +350,26 @@ public:
         return this->MaximumTorque;
     }
 
-    inline Float_Type SetEndVelcontrolPos(Float_Type tm)
+    inline int SetAllowableSwingRange(Float_Type tm)
     {
-    	this->EndVelcontrolPos = tm;
+    	this->AllowableSwingRange = tm;
     	return 0;
     }
 
-    inline Float_Type GetEndVelcontrolPos(void)
+    inline Float_Type GetAllowableSwingRange (void)
     {
-    	return this->EndVelcontrolPos;
+    	return this->AllowableSwingRange;
+    }
+
+    inline int SetSwingVelocity(Float_Type tm)
+    {
+    	this->Swing_velocity = tm;
+    	return 0;
+    }
+
+    inline Float_Type GetSwingVelocity(void)
+    {
+    	return this->Swing_velocity;
     }
 
     inline int SetSupplyVoltage(Float_Type vs)

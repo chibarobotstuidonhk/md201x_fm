@@ -15,6 +15,10 @@ void MotorCtrl::Control(void)
 #ifdef CTRL_POS
     // update current position
     this->current_position_pulse += pulse;
+    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > this->allowable_range_pulse))
+    {
+    	this->Shutdown();
+    }
 #endif
     this->velocity = pulse * Kh;
 
@@ -211,13 +215,15 @@ void MotorCtrl::Home(void)
 
 void MotorCtrl::Swing(void)
 {
-	if (this->shutdown && this->homing)
+	if (this->shutdown || this->homing)
 	{
 		return;
 	}
 
+	this->ResetState();
+	this->allowable_range_pulse = (this->AllowableSwingRange * Kr / (Kh * Tc)) + 0.5;
+	this->swing_offset_pulse = this->current_position_pulse;
 	this->swing = true;
-
 
 	led::mode = led::lighting_mode::error_1;
 }
@@ -260,7 +266,7 @@ void MotorCtrl::ReadConfig(void)
     this->HomingVelocity = confStruct.HomVel;
     this->MaximumTorque = confStruct.MaxTrq;
     this->SetSupplyVoltage(confStruct.Vsup);
-    this->EndVelcontrolPos = confStruct.Freepos;
+    this->AllowableSwingRange = confStruct.AllowRange;
 }
 
 void MotorCtrl::WriteConfig(void)
@@ -276,6 +282,6 @@ void MotorCtrl::WriteConfig(void)
     confStruct.HomVel = this->HomingVelocity;
     confStruct.MaxTrq = this->MaximumTorque;
     confStruct.Vsup = this->SupplyVoltage;
-    confStruct.Freepos = this->EndVelcontrolPos;
+    confStruct.AllowRange = this->AllowableSwingRange;
 }
 

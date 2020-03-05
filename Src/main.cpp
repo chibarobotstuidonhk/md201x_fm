@@ -156,7 +156,7 @@ int main(void)
     if (!conf_diag_uart)
     {
 #ifdef CTRL_POS
-        buf = "MDPOS201x BETA Position Control \r\nPWM_50K\r\nCAN_BITRATE_1000K \r\nInitializing...";
+        buf = "MDPOS201x BETA Position Control with Swing Mode \r\nPWM_50K\r\nCAN_BITRATE_1000K \r\nInitializing...";
 #else
         buf = "MDPOS201x BETA Velocity Control \r\nPWM_50K\r\nCAN_BITRATE_1000K \r\nInitializing...";
 #endif

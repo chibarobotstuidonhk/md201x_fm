@@ -386,15 +386,16 @@ void uart::process(void)
         // get kv
         uart::dump_value("Kv", "(rad/s)/rad", control.GetKv());
     }
-    else if (strcmp(cmd, "SFRP") == 0)
+    else if (strcmp(cmd, "SASR") == 0)
     {
-    	const char * name = "FreePos";
-    	control.SetEndVelcontrolPos(payload);
+    	payload = abs(payload);
+    	const char * name = "AllowableSwingRange";
+    	control.SetAllowableSwingRange(payload);
     	uart::valid_value_set(name, "rad", payload);
     }
-    else if (strcmp(cmd, "GFRP") == 0)
+    else if (strcmp(cmd, "GASR") == 0)
     {
-    	uart::dump_value("FreePos", "rad", control.GetEndVelcontrolPos());
+    	uart::dump_value("AllowableSwingRange", "rad", control.GetAllowableSwingRange());
     }
     /*
     else if (strcmp(cmd, "CBNK") == 0)

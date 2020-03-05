@@ -73,9 +73,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             case cmd_home:
                 control.Home();
                 break;
-            case cmd_swing:
-            	control.Swing();
-            	break;
+//            case cmd_swing:
+//            	control.Swing();
+//            	break;
 #endif
             default:
                 break;
@@ -91,14 +91,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
         led::turn_on_can_led();
     }
+#ifdef CTRL_POS
     else if ((rx_header.StdId == can_id_vel2) && (rx_header.DLC == 4))
     {
     	float vel_cmd;
     	can_unpack(rx_payload, vel_cmd);
-    	control.
+    	control.SetSwingVelocity(vel_cmd);
+    	control.Swing();
 
-
+    	led::turn_on_can_led();
     }
+#endif
+
     else
     {
         led::process();
