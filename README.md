@@ -13,3 +13,7 @@ can_unpack(msg->data, tmp);
 _stream_msg.data[0] = (int)(tmp>>32);
 _stream_msg.data[1] = (int)tmp;
 ```
+## for_mym_launcher  
+baseid+2にfloatで指令値[rad/s]を送ると回転を始め，予め決めた角度[rad]まで回り，shutdownします．  
+uartからSASRで回転角を決めることができます．  
+SSVLに角速度を渡すと動作確認ができます．
