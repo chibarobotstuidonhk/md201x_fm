@@ -90,6 +90,10 @@ extern "C"
      * FLAGS FOR POSITION/VELOCITY CONTROL
      */
 
+#define CAN_BITRATE CAN_BITRATE_1000K
+#define XSTR(C) STR(C)
+#define STR(S) #S
+
 #undef CTRL_POS
 #undef CTRL_VEL
 

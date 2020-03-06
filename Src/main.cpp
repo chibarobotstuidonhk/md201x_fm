@@ -149,16 +149,16 @@ int main(void)
     serial.start_dma();
 
     can_init();
-    can_set_bitrate(CAN_BITRATE_1000K);
+    can_set_bitrate(CAN_BITRATE); //you can configure bitrate in main.h
 
     const char * buf = nullptr;
 
     if (!conf_diag_uart)
     {
 #ifdef CTRL_POS
-        buf = "MDPOS201x BETA Position Control \r\nPWM_50K\r\nCAN_BITRATE_1000K \r\nInitializing...";
+        buf = "MDPOS201x BETA Position Control by yskhara and others \r\nPWM_50K\r\n" XSTR(CAN_BITRATE)" \r\nInitializing...";
 #else
-        buf = "MDPOS201x BETA Velocity Control \r\nPWM_50K\r\nCAN_BITRATE_1000K \r\nInitializing...";
+        buf = "MDPOS201x BETA Velocity Control by yakhara and others \r\nPWM_50K\r\n" XSTR(CAN_BITRATE)" \r\nInitializing...";
 #endif
         serial.write((const uint8_t *) buf, strlen(buf));
     }
@@ -658,7 +658,7 @@ static void MX_TIM1_Init(void)
 
     TIM_InitStruct.Prescaler = 0;
     TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-    TIM_InitStruct.Autoreload = 1440 - 1;//50khz;
+    TIM_InitStruct.Autoreload = 1440-1;
     TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
     TIM_InitStruct.RepetitionCounter = 0;
     LL_TIM_Init(TIM1, &TIM_InitStruct);
