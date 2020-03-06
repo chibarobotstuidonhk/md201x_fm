@@ -474,6 +474,13 @@ void uart::process(void)
     		serial.write((const uint8_t *) msg, strlen(msg));
     	}
     }
+    else if (strcmp(cmd, "SSVL") == 0)
+    {
+      	control.SetSwingVelocity(payload);
+       	control.Swing();
+       	const char * msg = "set swing velocity\r\n";
+       	serial.write((const uint8_t *) msg, strlen(msg));
+    }
 #else
     else if (strcmp(cmd, "SVTG") == 0)
     {
