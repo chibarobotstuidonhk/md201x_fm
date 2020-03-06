@@ -430,7 +430,7 @@ void uart::process(void)
         const char * msg = "read from flash\r\n";
         serial.write((const uint8_t *) msg, strlen(msg));
     }
-    else if (strcmp(cmd, "SENB") == 0)
+    else if (strcmp(cmd, "SENV") == 0)
     {
     	const char * msg;
         if(payload==1.0){
