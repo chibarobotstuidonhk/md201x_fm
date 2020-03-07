@@ -16,9 +16,9 @@ extern "C"
     {
         uint16_t can_id_cmd;
         uint16_t can_id_vel;
+        uint16_t can_id_stat;
         uint16_t can_id_vel2;
         uint16_t can_id_stream;
-        uint16_t can_id_stat;
         double Kp;
         double KiTc;
         double Ke;
