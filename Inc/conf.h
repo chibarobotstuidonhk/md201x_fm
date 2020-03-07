@@ -18,7 +18,6 @@ extern "C"
         uint16_t can_id_vel;
         uint16_t can_id_stat;
         uint16_t can_id_vel2;
-        uint16_t can_id_stream;
         double Kp;
         double KiTc;
         double Ke;
