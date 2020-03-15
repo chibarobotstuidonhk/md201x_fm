@@ -37,6 +37,7 @@ public:
 
         this->shutdown = true;
         this->homing = false;
+        this->swing = false;
 
         led::mode = led::lighting_mode::shutdown;
 
@@ -82,6 +83,8 @@ public:
     {
         return this->homing;
     }
+
+    void Swing(void);
 
 private:
 
@@ -134,6 +137,7 @@ private:
 
     bool shutdown = true;
     bool homing = false;
+    bool swing = false;
 
     int pulse = 0;
     Float_Type velocity = 0;                            // current velocity in [rad/s]
@@ -147,6 +151,8 @@ private:
 #ifdef CTRL_POS
     int current_position_pulse = 0;
     int target_position_pulse = 0;
+    int allowable_range_pulse = 0;
+    int swing_offset_pulse = 0;
 #endif
 
     Float_Type target_velocity = 0;                     // target angular velocity [rad/sec]
@@ -182,10 +188,13 @@ private:
                                                      //電気ではなく機械を基準にしてもよかろう．
     Float_Type MaximumVoltage = 22;                     // デューティ最大のときの出力電圧で，電圧制限を定める．
 
+    Float_Type AllowableSwingRange = 0;					//　ぶんまわしの最大角度．司令を受け取ったところからの絶対角で正の値．
+
     Float_Type SupplyVoltage = 24;
 
     Float_Type HomingVelocity = 1;                      // ホーミングの際の速度．
                                                      // TODO: UARTから変更できるようにする．→できるようになった？
+    Float_Type Swing_velocity = 0;
 
 public:
 
@@ -339,6 +348,28 @@ public:
     inline Float_Type GetMaximumTorque(void)
     {
         return this->MaximumTorque;
+    }
+
+    inline int SetAllowableSwingRange(Float_Type tm)
+    {
+    	this->AllowableSwingRange = tm;
+    	return 0;
+    }
+
+    inline Float_Type GetAllowableSwingRange (void)
+    {
+    	return this->AllowableSwingRange;
+    }
+
+    inline int SetSwingVelocity(Float_Type tm)
+    {
+    	this->Swing_velocity = tm;
+    	return 0;
+    }
+
+    inline Float_Type GetSwingVelocity(void)
+    {
+    	return this->Swing_velocity;
     }
 
     inline int SetSupplyVoltage(Float_Type vs)

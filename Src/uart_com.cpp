@@ -134,9 +134,8 @@ void uart::process(void)
         {
             confStruct.can_id_cmd = base_id;
             confStruct.can_id_vel = base_id + 1;
-//            confStruct.can_id_stream = base_id + 2;
+            confStruct.can_id_vel2 = base_id + 2;
             confStruct.can_id_stat = base_id + 3;
-            // well, base+2 is currently reserved for "future use." what a waste, eh?
         }
 
         uart::dump_can_id(true);
@@ -386,7 +385,19 @@ void uart::process(void)
     {
         // get kv
         uart::dump_value("Kv", "(rad/s)/rad", control.GetKv());
-    }/*
+    }
+    else if (strcmp(cmd, "SASR") == 0)
+    {
+    	payload = fabs(payload);
+    	const char * name = "AllowableSwingRange";
+    	control.SetAllowableSwingRange(payload);
+    	uart::valid_value_set(name, "rad", payload);
+    }
+    else if (strcmp(cmd, "GASR") == 0)
+    {
+    	uart::dump_value("AllowableSwingRange", "rad", control.GetAllowableSwingRange());
+    }
+    /*
     else if (strcmp(cmd, "CBNK") == 0)
     {
         // change bank
@@ -462,6 +473,13 @@ void uart::process(void)
     		const char * msg = "shutdown and retry\r\n";
     		serial.write((const uint8_t *) msg, strlen(msg));
     	}
+    }
+    else if (strcmp(cmd, "SSVL") == 0)
+    {
+      	control.SetSwingVelocity(payload);
+       	control.Swing();
+       	const char * msg = "set swing velocity\r\n";
+       	serial.write((const uint8_t *) msg, strlen(msg));
     }
 #else
     else if (strcmp(cmd, "SVTG") == 0)

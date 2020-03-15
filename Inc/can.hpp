@@ -26,6 +26,7 @@ static const unsigned int CAN_MTU = 8;
 
 static uint16_t can_id_cmd = 0x0000;
 static uint16_t can_id_vel = 0x0000;
+static uint16_t can_id_vel2= 0x0000;
 //static uint16_t can_id_pos = 0x0000;
 static uint16_t can_id_stat = 0x0000;
 

@@ -17,6 +17,7 @@ static constexpr uint8_t cmd_shutdown = 0x00;
 static constexpr uint8_t cmd_recover = 0x01;
 static constexpr uint8_t cmd_home = 0x10;
 static constexpr uint8_t get_status = 0x11;
+static constexpr uint8_t cmd_swing = 0x12;
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
@@ -72,6 +73,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
             case cmd_home:
                 control.Home();
                 break;
+//            case cmd_swing:
+//            	control.Swing();
+//            	break;
 #endif
             default:
                 break;
@@ -87,6 +91,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
         led::turn_on_can_led();
     }
+#ifdef CTRL_POS
+    else if ((rx_header.StdId == can_id_vel2) && (rx_header.DLC == 4))
+    {
+    	float vel_cmd;
+    	can_unpack(rx_payload, vel_cmd);
+    	control.SetSwingVelocity(vel_cmd);
+    	control.Swing();
+
+    	led::turn_on_can_led();
+    }
+#endif
+
     else
     {
         led::process();
@@ -123,6 +139,7 @@ void can_read_conf(void)
 {
     can_id_cmd = confStruct.can_id_cmd;
     can_id_vel = confStruct.can_id_vel;
+    can_id_vel2 = confStruct.can_id_vel2;
     can_id_stat = confStruct.can_id_stat;
 }
 

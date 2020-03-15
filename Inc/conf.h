@@ -17,6 +17,7 @@ extern "C"
         uint16_t can_id_cmd;
         uint16_t can_id_vel;
         uint16_t can_id_stat;
+        uint16_t can_id_vel2;
         double Kp;
         double KiTc;
         double Ke;
@@ -25,6 +26,7 @@ extern "C"
         double Kr;
         double MaxVel;
         double MaxTrq;
+        double AllowRange;
         double Vsup;
         double HomVel;
         double MaxTravel;

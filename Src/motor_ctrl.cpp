@@ -15,6 +15,10 @@ void MotorCtrl::Control(void)
 #ifdef CTRL_POS
     // update current position
     this->current_position_pulse += pulse;
+    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > this->allowable_range_pulse))
+    {
+    	this->Shutdown();
+    }
 #endif
     this->velocity = pulse * Kh;
 
@@ -50,24 +54,31 @@ void MotorCtrl::Control(void)
     {
         tmp_vel = this->HomingVelocity;
     }
+    else if (this->swing)
+    {
+    	tmp_vel = this->Swing_velocity; //CAN baseid +2で受け取った司令
+    }
     else
     {
         tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
     }
 
-// limit target velocity
-    if (MaximumVelocity < tmp_vel)
+// limit target velocity when not swing mode
+    if ((MaximumVelocity < tmp_vel) && !this->swing)
     {
-        this->target_velocity = MaximumVelocity;
+    	this->target_velocity = MaximumVelocity;
     }
-    else if (tmp_vel < -MaximumVelocity)
+    else if ((tmp_vel < -MaximumVelocity) && !this->swing)
     {
-        this->target_velocity = -MaximumVelocity;
+    	this->target_velocity = -MaximumVelocity;
     }
-    else
+   	else
     {
-        this->target_velocity = tmp_vel;
-    }
+    	this->target_velocity = tmp_vel;
+   	}
+
+
+
 #endif
 
 
@@ -202,6 +213,21 @@ void MotorCtrl::Home(void)
     led::mode = led::lighting_mode::error_0;
 }
 
+void MotorCtrl::Swing(void)
+{
+	if (this->shutdown || this->homing)
+	{
+		return;
+	}
+
+	this->ResetState();
+	this->allowable_range_pulse = (this->AllowableSwingRange * Kr / (Kh * Tc)) + 0.5;
+	this->swing_offset_pulse = this->current_position_pulse;
+	this->swing = true;
+
+	led::mode = led::lighting_mode::error_1;
+}
+
 #endif
 
 void MotorCtrl::Print(void)
@@ -240,6 +266,7 @@ void MotorCtrl::ReadConfig(void)
     this->HomingVelocity = confStruct.HomVel;
     this->MaximumTorque = confStruct.MaxTrq;
     this->SetSupplyVoltage(confStruct.Vsup);
+    this->AllowableSwingRange = confStruct.AllowRange;
 }
 
 void MotorCtrl::WriteConfig(void)
@@ -255,5 +282,6 @@ void MotorCtrl::WriteConfig(void)
     confStruct.HomVel = this->HomingVelocity;
     confStruct.MaxTrq = this->MaximumTorque;
     confStruct.Vsup = this->SupplyVoltage;
+    confStruct.AllowRange = this->AllowableSwingRange;
 }
 
