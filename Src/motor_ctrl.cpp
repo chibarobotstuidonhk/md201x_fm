@@ -121,7 +121,7 @@ void MotorCtrl::Control(void)
 void MotorCtrl::SetTarget(Float_Type target)
 {
 #ifdef CTRL_POS
-    int tmp = (target * Kr / (Kh * Tc)) + 0.5;
+    int tmp = (int)roundf(target * Kr / (Kh * Tc));
 
 #ifdef LIMIT_POS
 
