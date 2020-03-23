@@ -60,8 +60,11 @@ void MotorCtrl::Control(void)
     }
     else
     {
-//    	this->
-        tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
+    	this->position_error_prev_pulse = this->position_error_pulse;
+    	this->position_error_pulse = this->target_position_pulse - this->current_position_pulse;
+        tmp_vel = ((this->position_error_pulse) * Kv //比例
+        		+ ((Float_Type)(this->position_error_pulse - this->position_error_prev_pulse) / Tc) * Kd) //微分
+        				* Kh * Tc;
     }
 
 // limit target velocity when not swing mode
@@ -264,6 +267,7 @@ void MotorCtrl::ReadConfig(void)
     this->Kh = confStruct.Kh;
     this->Kr = confStruct.Kr;
     this->Kv = confStruct.Kv;
+    this->Kd = confStruct.Kd;
     this->MaximumVelocity = confStruct.MaxVel;
     this->HomingVelocity = confStruct.HomVel;
     this->MaximumTorque = confStruct.MaxTrq;
@@ -280,6 +284,7 @@ void MotorCtrl::WriteConfig(void)
     confStruct.Kh = this->Kh;
     confStruct.Kr = this->Kr;
     confStruct.Kv = this->Kv;
+    confStruct.Kd = this->Kd;
     confStruct.MaxVel = this->MaximumVelocity;
     confStruct.HomVel = this->HomingVelocity;
     confStruct.MaxTrq = this->MaximumTorque;

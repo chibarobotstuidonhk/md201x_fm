@@ -31,6 +31,7 @@ extern "C"
         double HomVel;
         double MaxTravel;
         double Kv;
+        double Kd;
     } ConfStruct;
 }
 

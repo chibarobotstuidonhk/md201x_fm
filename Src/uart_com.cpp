@@ -386,6 +386,26 @@ void uart::process(void)
         // get kv
         uart::dump_value("Kv", "(rad/s)/rad", control.GetKv());
     }
+    else if (strcmp(cmd, "SKDP") == 0)
+    {
+        // set kd
+        int ret = control.SetKd(payload);
+        const char * name = "Kd";
+
+        if (ret != 0)
+        {
+            uart::invalid_value(name, payload);
+        }
+        else
+        {
+           uart::valid_value_set(name, "rad/rad", payload);
+        }
+    }
+    else if (strcmp(cmd, "GKDP") == 0)
+    {
+        // get kd
+        uart::dump_value("Kd", "rad/rad", control.GetKd());
+    }
     else if (strcmp(cmd, "SASR") == 0)
     {
     	payload = fabs(payload);

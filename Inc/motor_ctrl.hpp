@@ -172,6 +172,7 @@ private:
     Float_Type Kv = 20;                                  // 位置偏差比例ゲイン
                                                       // 775, 385では40にした．
                                                         // 380では20にしてみたけど，もう少し低くても良さそう．
+    Float_Type Kd = 0;									// 位置偏差微分ゲイン
 
     //Float_Type Ppr = 2000;
     Float_Type Kh = 2 * M_PI / (2000 * Tc);             // エンコーダ入力[pulse/ctrl]を[rad/s]に変換する係数．kg / Tc．
@@ -308,6 +309,21 @@ public:
     inline Float_Type GetKv(void)
     {
         return this->Kv;
+    }
+
+    inline int SetKd(Float_Type kd)
+    {
+        // Kd is NOT allowed to be negative value.
+        if (kd < 0)
+            return -1;
+
+        this->Kd = kd;
+        return 0;
+    }
+
+    inline Float_Type GetKd(void)
+    {
+        return this->Kd;
     }
 
     inline int SetMaximumVelocity(Float_Type om)
