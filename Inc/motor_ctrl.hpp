@@ -151,6 +151,8 @@ private:
 #ifdef CTRL_POS
     int current_position_pulse = 0;
     int target_position_pulse = 0;
+    int position_error_pulse = 0;
+    int position_error_prev_pulse = 0;
     int allowable_range_pulse = 0;
     int swing_offset_pulse = 0;
 #endif

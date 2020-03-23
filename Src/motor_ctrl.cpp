@@ -60,6 +60,7 @@ void MotorCtrl::Control(void)
     }
     else
     {
+//    	this->
         tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
     }
 
@@ -88,6 +89,7 @@ void MotorCtrl::Control(void)
 
     this->u_p = Kp * (this->error - this->error_prev);
     this->u_i = KiTc * this->error;
+
 
     this->target_torque += (u_p + u_i);
 
