@@ -63,7 +63,7 @@ void MotorCtrl::Control(void)
     	this->position_error_prev_pulse = this->position_error_pulse;
     	this->position_error_pulse = this->target_position_pulse - this->current_position_pulse;
         tmp_vel = ((this->position_error_pulse) * Kv //比例
-        		+ ((Float_Type)(this->position_error_pulse - this->position_error_prev_pulse) / Tc) * Kd) //微分
+        		+ ((Float_Type)(this->position_error_prev_pulse - this->position_error_pulse) / Tc) * Kd) //微分
         				* Kh * Tc;
     }
 

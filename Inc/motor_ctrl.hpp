@@ -129,6 +129,8 @@ private:
 
 #ifdef CTRL_POS
         this->target_position_pulse = this->current_position_pulse;
+        this->position_error_pulse = 0;
+        this->position_error_prev_pulse = 0;
 #endif
         this->target_velocity = 0;
         this->target_torque = 0;
