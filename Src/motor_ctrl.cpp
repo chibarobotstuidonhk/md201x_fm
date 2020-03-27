@@ -15,7 +15,7 @@ void MotorCtrl::Control(void)
 #ifdef CTRL_POS
     // update current position
     this->current_position_pulse += pulse;
-    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > this->allowable_range_pulse))
+    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > this->allowable_range_pulse)) //きたない
     {
     	this->Shutdown();
     }
@@ -60,7 +60,11 @@ void MotorCtrl::Control(void)
     }
     else
     {
-        tmp_vel = (this->target_position_pulse - this->current_position_pulse) * Kh * Tc * Kv;
+    	this->position_error_prev_pulse = this->position_error_pulse;
+    	this->position_error_pulse = this->target_position_pulse - this->current_position_pulse;
+        tmp_vel = ((this->position_error_pulse) * Kv //比例
+        		+ ((Float_Type)(this->position_error_pulse - this->position_error_prev_pulse) / Tc) * Kd) //微分
+        				* Kh * Tc;
     }
 
 // limit target velocity when not swing mode
@@ -88,6 +92,7 @@ void MotorCtrl::Control(void)
 
     this->u_p = Kp * (this->error - this->error_prev);
     this->u_i = KiTc * this->error;
+
 
     this->target_torque += (u_p + u_i);
 
@@ -137,6 +142,7 @@ void MotorCtrl::SetTarget(Float_Type target)
     {
 #endif
     this->target_position_pulse = tmp;
+//    this->position_error_pulse = this->position_error_prev_pulse = this->target_position_pulse - this->current_position_pulse;
 #ifdef LIMIT_POS
 }
 #endif
@@ -221,7 +227,7 @@ void MotorCtrl::Swing(void)
 	}
 
 	this->ResetState();
-	this->allowable_range_pulse = (this->AllowableSwingRange * Kr / (Kh * Tc)) + 0.5;
+	this->allowable_range_pulse = abs((this->AllowableSwingRange * Kr / (Kh * Tc)) + 0.5);
 	this->swing_offset_pulse = this->current_position_pulse;
 	this->swing = true;
 
@@ -262,6 +268,7 @@ void MotorCtrl::ReadConfig(void)
     this->Kh = confStruct.Kh;
     this->Kr = confStruct.Kr;
     this->Kv = confStruct.Kv;
+    this->Kd = confStruct.Kd;
     this->MaximumVelocity = confStruct.MaxVel;
     this->HomingVelocity = confStruct.HomVel;
     this->MaximumTorque = confStruct.MaxTrq;
@@ -278,6 +285,7 @@ void MotorCtrl::WriteConfig(void)
     confStruct.Kh = this->Kh;
     confStruct.Kr = this->Kr;
     confStruct.Kv = this->Kv;
+    confStruct.Kd = this->Kd;
     confStruct.MaxVel = this->MaximumVelocity;
     confStruct.HomVel = this->HomingVelocity;
     confStruct.MaxTrq = this->MaximumTorque;

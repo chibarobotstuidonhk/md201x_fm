@@ -129,6 +129,8 @@ private:
 
 #ifdef CTRL_POS
         this->target_position_pulse = this->current_position_pulse;
+        this->position_error_pulse = 0;
+        this->position_error_prev_pulse = 0;
 #endif
         this->target_velocity = 0;
         this->target_torque = 0;
@@ -151,6 +153,8 @@ private:
 #ifdef CTRL_POS
     int current_position_pulse = 0;
     int target_position_pulse = 0;
+    int position_error_pulse = 0;
+    int position_error_prev_pulse = 0;
     int allowable_range_pulse = 0;
     int swing_offset_pulse = 0;
 #endif
@@ -170,6 +174,7 @@ private:
     Float_Type Kv = 20;                                  // 位置偏差比例ゲイン
                                                       // 775, 385では40にした．
                                                         // 380では20にしてみたけど，もう少し低くても良さそう．
+    Float_Type Kd = 0;									// 位置偏差微分ゲイン
 
     //Float_Type Ppr = 2000;
     Float_Type Kh = 2 * M_PI / (2000 * Tc);             // エンコーダ入力[pulse/ctrl]を[rad/s]に変換する係数．kg / Tc．
@@ -308,6 +313,21 @@ public:
         return this->Kv;
     }
 
+    inline int SetKd(Float_Type kd)
+    {
+        // Kd is NOT allowed to be negative value.
+        if (kd < 0)
+            return -1;
+
+        this->Kd = kd;
+        return 0;
+    }
+
+    inline Float_Type GetKd(void)
+    {
+        return this->Kd;
+    }
+
     inline int SetMaximumVelocity(Float_Type om)
     {
         if (om < 0)
@@ -363,7 +383,7 @@ public:
 
     inline int SetSwingVelocity(Float_Type tm)
     {
-    	this->Swing_velocity = tm;
+    	this->Swing_velocity = tm * this->Kr;
     	return 0;
     }
 
