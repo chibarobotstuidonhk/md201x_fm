@@ -15,7 +15,7 @@ void MotorCtrl::Control(void)
 #ifdef CTRL_POS
     // update current position
     this->current_position_pulse += pulse;
-    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > this->allowable_range_pulse))
+    if((this->swing) && (abs(this->current_position_pulse - this->swing_offset_pulse) > abs(this->allowable_range_pulse))) //きたない
     {
     	this->Shutdown();
     }
@@ -142,7 +142,7 @@ void MotorCtrl::SetTarget(Float_Type target)
     {
 #endif
     this->target_position_pulse = tmp;
-    this->position_error_pulse = this->position_error_prev_pulse = this->target_position_pulse - this->current_position_pulse;
+//    this->position_error_pulse = this->position_error_prev_pulse = this->target_position_pulse - this->current_position_pulse;
 #ifdef LIMIT_POS
 }
 #endif

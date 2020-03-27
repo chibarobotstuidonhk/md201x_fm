@@ -383,7 +383,7 @@ public:
 
     inline int SetSwingVelocity(Float_Type tm)
     {
-    	this->Swing_velocity = tm;
+    	this->Swing_velocity = tm * this->Kr;
     	return 0;
     }
 
